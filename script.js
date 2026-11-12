@@ -2,22 +2,24 @@ let todayKey = "";
 let todayPuzzle = null;
 let paises = [];
 
+// Estado: cluesRevealed va de 1 a 5. Puntuación de 100 a 20.
 let savedState = JSON.parse(localStorage.getItem('elmapaTodayState')) || {
-  date: "", guessed: [], fails: 0, status: 'playing' 
+  date: "", guessed: [], cluesRevealed: 1, score: 100, status: 'playing' 
 };
 
 const archiveView = document.getElementById('archive-view');
 const gameView = document.getElementById('game-view');
 const reviewView = document.getElementById('review-view');
 const dailyActionContainer = document.getElementById('daily-action-container');
+
 const buscador = document.getElementById('buscador');
 const autocompletarLista = document.getElementById('autocompletar-lista');
 const btnEnviar = document.getElementById('btn-enviar');
+const btnPedirPista = document.getElementById('btn-pedir-pista');
+const hintsContainer = document.getElementById('hints-container');
+const scoreDisplay = document.getElementById('score-display');
 const feedbackContainer = document.getElementById('feedback-container');
 const mensajePista = document.getElementById('mensaje-pista');
-const brujula = document.getElementById('brujula');
-const flecha = document.getElementById('flecha');
-const livesDisplay = document.getElementById('lives-display');
 
 fetch('datos.json')
   .then(res => res.json())
@@ -36,11 +38,10 @@ fetch('datos.json')
     todayPuzzle = retos[dayIndex % retos.length];
     
     if (savedState.date !== todayKey) {
-      savedState = { date: todayKey, guessed: [], fails: 0, status: 'playing' };
+      savedState = { date: todayKey, guessed: [], cluesRevealed: 1, score: 100, status: 'playing' };
       saveState();
     }
     
-    document.getElementById('pregunta-texto').innerText = todayPuzzle.pregunta;
     renderMenuUI();
     initCountdown();
   });
@@ -70,6 +71,7 @@ function renderMenuUI() {
   dailyActionContainer.innerHTML = '';
   const btn = document.createElement('button');
   btn.className = 'btn-pixel';
+  
   if (savedState.status === 'playing') {
     btn.textContent = '▶ JUGAR';
     btn.style.padding = '20px';
@@ -77,7 +79,7 @@ function renderMenuUI() {
     btn.onclick = () => {
         archiveView.classList.replace('show', 'hidden');
         gameView.classList.replace('hidden', 'show');
-        updateUI();
+        updateGameUI();
     };
   } else {
     btn.style.background = savedState.status === 'won' ? 'var(--success)' : 'var(--danger)';
@@ -109,12 +111,12 @@ function showReview() {
   const isWon = savedState.status === 'won';
   document.getElementById('review-content').innerHTML = `
     <div class="review-item ${isWon ? 'correct' : 'incorrect'}">
-      <p style="font-size:1.8rem; font-weight:bold; color: ${isWon ? 'var(--success)' : 'var(--danger)'};">${isWon ? '✨ ¡ACERTASTE!' : '💀 SIN VIDAS'}</p>
+      <p style="font-size:1.8rem; font-weight:bold; color: ${isWon ? 'var(--success)' : 'var(--danger)'};">${isWon ? '✨ ¡DESCUBIERTO!' : '💀 SIN PUNTOS'}</p>
       <p style="font-size:3rem; font-weight:bold; margin: 10px 0; text-transform:uppercase; color: var(--text);">${todayPuzzle.respuesta}</p>
-      <p style="font-size:1.3rem; text-transform:none; color: var(--text);"><strong>Pregunta:</strong> ${todayPuzzle.pregunta}</p>
       
       <div style="background: var(--bg); padding: 10px; border: 2px solid #000; border-radius: 4px; color: var(--text); margin-top: 15px;">
-        <p style="font-size:1.3rem; margin-top:5px;">Fallos cometidos: <strong>${savedState.fails} / 3</strong></p>
+        <p style="font-size:1.3rem; margin-top:5px;">Puntuación final: <strong>${savedState.score} pts</strong></p>
+        <p style="font-size:1.3rem; margin-top:5px;">Pistas necesitadas: <strong>${savedState.cluesRevealed} / 5</strong></p>
       </div>
     </div>
   `;
@@ -122,9 +124,9 @@ function showReview() {
 
 document.getElementById('btn-share').onclick = () => {
   const isWon = savedState.status === 'won';
-  const vidas = 3 - savedState.fails;
-  const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n\n` +
-               `Vidas restantes: ${'💚'.repeat(Math.max(0, vidas))}${'🖤'.repeat(savedState.fails)}\n\n` +
+  const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n` +
+               `País descubierto con ${savedState.cluesRevealed}/5 pistas.\n` +
+               `Puntuación: ${savedState.score} pts 🌍\n\n` +
                `Juega en: https://alejandrocoonde.github.io/elmapa/`;
   
   navigator.clipboard.writeText(text).then(() => {
@@ -164,6 +166,12 @@ document.addEventListener('click', (e) => {
   if (e.target !== buscador) autocompletarLista.classList.add('hidden');
 });
 
+// Botón pedir pista manualmente
+btnPedirPista.onclick = () => {
+    if (savedState.status !== 'playing' || savedState.cluesRevealed >= 5) return;
+    desbloquearPista();
+};
+
 btnEnviar.onclick = () => {
   if (savedState.status !== 'playing') return;
   const intentoStr = buscador.value.trim();
@@ -179,70 +187,62 @@ btnEnviar.onclick = () => {
   
   if (paisIntento.nombre.toLowerCase() === todayPuzzle.respuesta.toLowerCase()) {
     savedState.status = 'won';
+    saveState();
+    updateGameUI("¡Correcto!");
   } else {
-    savedState.fails++;
-    if (savedState.fails >= 3) {
-      savedState.status = 'lost';
+    // Fallar cuesta una pista automáticamente
+    if (savedState.cluesRevealed < 5) {
+        desbloquearPista(`❌ ${paisIntento.nombre} no es correcto. ¡Siguiente pista!`);
+    } else {
+        savedState.score = 0;
+        savedState.status = 'lost';
+        saveState();
+        updateGameUI(`💀 Era ${todayPuzzle.respuesta}`);
     }
   }
-  saveState();
-  updateUI(paisIntento);
 };
 
-function updateUI(ultimoIntento = null) {
-  const vidas = Math.max(0, 3 - savedState.fails);
-  livesDisplay.textContent = '💚'.repeat(vidas) + '🖤'.repeat(3 - vidas);
+function desbloquearPista(mensajeOpcional = null) {
+    savedState.cluesRevealed++;
+    savedState.score -= 20;
+    saveState();
+    updateGameUI(mensajeOpcional);
+}
+
+function updateGameUI(feedbackMsg = null) {
+  scoreDisplay.textContent = savedState.score;
+  hintsContainer.innerHTML = '';
   
-  if (savedState.status !== 'playing') {
-    if(ultimoIntento) {
-        feedbackContainer.classList.remove('hidden');
-        brujula.classList.add('hidden');
-        if(savedState.status === 'won') {
-            mensajePista.innerHTML = `🎉 ¡CORRECTO! Era <strong>${todayPuzzle.respuesta}</strong>.`;
-        } else {
-            mensajePista.innerHTML = `💀 Sin vidas. Era <strong>${todayPuzzle.respuesta}</strong>.`;
-        }
-    }
-    setTimeout(showReview, 2000);
-    return;
-  }
-  
-  if (ultimoIntento && savedState.status === 'playing') {
-    const correcto = paises.find(p => p.nombre.toLowerCase() === todayPuzzle.respuesta.toLowerCase());
-    feedbackContainer.classList.remove('hidden');
-    brujula.classList.add('hidden');
-    
-    if (savedState.fails === 1) {
-      if (ultimoIntento.continente === correcto.continente) {
-        mensajePista.innerHTML = `❌ Fallo. Pero vas bien: ¡está en <strong>${ultimoIntento.continente}</strong>!`;
+  // Renderizar las 5 pistas
+  for (let i = 0; i < 5; i++) {
+      const div = document.createElement('div');
+      if (i < savedState.cluesRevealed) {
+          div.className = 'hint-item';
+          div.innerText = todayPuzzle.pistas[i];
       } else {
-        mensajePista.innerHTML = `❌ Fallo. No está en <strong>${ultimoIntento.continente}</strong>.`;
+          div.className = 'hint-item locked';
+          div.innerText = "Contenido oculto para proteger el layout";
       }
-    } else if (savedState.fails === 2) {
-      const angulo = calcularRumbo(ultimoIntento.lat, ultimoIntento.lon, correcto.lat, correcto.lon);
-      const dir = obtenerDireccion(angulo);
-      mensajePista.innerHTML = `❌ Fallo 2. El país correcto está al <strong>${dir}</strong> de ${ultimoIntento.nombre}.`;
-      brujula.classList.remove('hidden');
-      
-      flecha.style.transform = `rotate(0deg)`;
-      setTimeout(() => {
-          flecha.style.transform = `rotate(${angulo}deg)`;
-      }, 50);
-    }
+      hintsContainer.appendChild(div);
   }
-}
 
-function calcularRumbo(lat1, lon1, lat2, lon2) {
-  const toRad = x => x * Math.PI / 180;
-  const toDeg = x => x * 180 / Math.PI;
-  const dLon = toRad(lon2 - lon1);
-  lat1 = toRad(lat1); lat2 = toRad(lat2);
-  const y = Math.sin(dLon) * Math.cos(lat2);
-  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-  return (toDeg(Math.atan2(y, x)) + 360) % 360;
-}
-
-function obtenerDireccion(grados) {
-  const dirs = ["Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste"];
-  return dirs[Math.round(grados / 45) % 8];
+  // Estado del botón de pedir pista
+  if (savedState.cluesRevealed >= 5 || savedState.status !== 'playing') {
+      btnPedirPista.disabled = true;
+  } else {
+      btnPedirPista.disabled = false;
+  }
+  
+  // Mensaje de feedback si has fallado o ganado
+  if (feedbackMsg) {
+      feedbackContainer.classList.remove('hidden');
+      mensajePista.innerText = feedbackMsg;
+  }
+  
+  // Fin del juego
+  if (savedState.status !== 'playing') {
+      btnEnviar.disabled = true;
+      buscador.disabled = true;
+      setTimeout(showReview, 2000);
+  }
 }

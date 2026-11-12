@@ -21,16 +21,23 @@
       <span id="countdown-timer" class="mono">--:--:--</span>
     </div>
     
-    <!-- CÓMO JUGAR EN ACORDEÓN DESPLEGABLE ESTILO COLGADO -->
+    <!-- CÓMO JUGAR -->
     <details class="pixel-box how-to-accordion">
       <summary>
         <h3>CÓMO JUGAR <span class="arrow">▼</span></h3>
       </summary>
       <div class="accordion-content">
-        <p>🎯 Adivina el país del día a partir de la pregunta.</p>
-        <p>💔 Tienes <strong>3 vidas</strong>.</p>
-        <p>🌍 Fallo 1: Te diremos si has acertado el <strong>continente</strong>.</p>
-        <p>🧭 Fallo 2: Te daremos la <strong>dirección</strong> (brújula) desde el país que has puesto hasta la solución correcta.</p>
+        <p>🌍 Adivina el <strong>país misterioso</strong> del día.</p>
+        <p>🔍 El juego te dará hasta <strong>5 pistas progresivas</strong> sobre geografía, cultura, o estadística.</p>
+        <p>💔 Un fallo (o pedir una pista manualmente) desbloqueará la siguiente pista y restará puntos.</p>
+        <p>🏆 <strong>Puntuaciones:</strong></p>
+        <ul style="margin-left: 20px; font-size: 1.2rem; color: var(--text);">
+          <li>1 pista: <strong>100 pts</strong></li>
+          <li>2 pistas: <strong>80 pts</strong></li>
+          <li>3 pistas: <strong>60 pts</strong></li>
+          <li>4 pistas: <strong>40 pts</strong></li>
+          <li>5 pistas: <strong>20 pts</strong></li>
+        </ul>
       </div>
     </details>
     
@@ -39,8 +46,6 @@
     <!-- OTROS MINIJUEGOS -->
     <div class="pixel-box" style="text-align: center; margin-top: 10px;">
       <h2 style="margin-bottom: 15px; color: var(--accent);">OTROS MINIJUEGOS</h2>
-      
-      <!-- Enlace a La Horquilla -->
       <div style="margin-bottom: 20px;">
         <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">¿Quieres poner a prueba tu intuición con números?</p>
         <a href="https://alejandrocoonde.github.io/lahorquilla/" style="text-decoration: none;">
@@ -49,8 +54,6 @@
           </button>
         </a>
       </div>
-      
-      <!-- Enlace a El Colgado -->
       <div>
         <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">Adivina la palabra oculta antes de caer a la lava.</p>
         <a href="https://alejandrocoonde.github.io/elcolgado/" style="text-decoration: none;">
@@ -66,4 +69,53 @@
   <div id="review-view" class="archive-container hidden">
     <div class="pixel-box">
       <h2>REVISIÓN DE HOY</h2>
-      <p style="margin-top:5px; margin-bottom: 15px; color:
+      <p style="margin-top:5px; margin-bottom: 15px; color: var(--text-muted);">Tu resultado en el reto diario:</p>
+      <div id="review-content" class="review-content"></div>
+      <button id="btn-share" class="btn-pixel share-btn" style="margin-top: 20px; background: #3b82f6;">COMPARTIR RESULTADO 📋</button>
+      <button id="btn-back-archive" class="btn-pixel" style="margin-top: 10px; background: var(--track); color: #fff;">VOLVER AL MENÚ</button>
+    </div>
+  </div>
+  
+  <!-- JUEGO -->
+  <div id="game-view" class="game-container hidden">
+    <header class="pixel-box">
+      <div class="brand">
+        <h1>EL MAPA</h1>
+        <button id="btn-archive" class="btn-pixel small-btn">SALIR</button>
+      </div>
+      <div class="stats-row" style="justify-content: center;">
+        <div class="status-group">
+          <span>PUNTOS: </span>
+          <span id="score-display" class="score">100</span>
+        </div>
+      </div>
+    </header>
+    
+    <div class="pixel-box" style="padding: 15px;">
+      <!-- MAPA PLACEHOLDER (Aquí irá tu SVG en el futuro) -->
+      <div id="mapa-interactivo" class="mapa-svg-container hidden-mobile">
+        <p>🗺️ (Espacio para tu mapa SVG)</p>
+      </div>
+
+      <div id="hints-container" class="hints-list">
+        <!-- Las pistas se inyectan por JS -->
+      </div>
+      
+      <button id="btn-pedir-pista" class="btn-pixel small-btn" style="width: 100%; margin: 15px 0; background: var(--card); color: var(--text); border-color: var(--accent);">🔍 PEDIR SIGUIENTE PISTA (-20 pts)</button>
+      
+      <div class="buscador-container">
+        <input type="text" id="buscador" placeholder="Escribe un país..." autocomplete="off">
+        <div id="autocompletar-lista" class="hidden"></div>
+        <button id="btn-enviar" class="btn-pixel" style="margin-top: 10px;">ADIVINAR</button>
+      </div>
+      
+      <div id="feedback-container" class="hidden">
+        <p id="mensaje-pista"></p>
+      </div>
+    </div>
+  </div>
+  
+  <div id="toast" class="toast">¡COPIADO AL PORTAPAPELES!</div>
+  <script src="script.js"></script>
+</body>
+</html>
