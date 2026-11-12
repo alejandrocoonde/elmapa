@@ -6,6 +6,39 @@ let savedState = JSON.parse(localStorage.getItem('elmapaTodayState')) || {
   date: "", guessed: [], cluesRevealed: 1, score: 100, status: 'playing' 
 };
 
+// --- DICCIONARIO UNIVERSAL (ISO a Español) ---
+// Traduce el ID o Nombre interno que traiga tu world.svg al nombre en español de tu base de datos
+const svgCodeToName = {
+    "AF": "Afganistán", "AL": "Albania", "DZ": "Argelia", "AD": "Andorra", "AO": "Angola", "AG": "Antigua y Barbuda",
+    "AR": "Argentina", "AM": "Armenia", "AU": "Australia", "AT": "Austria", "AZ": "Azerbaiyán", "BS": "Bahamas", "BH": "Baréin",
+    "BD": "Bangladés", "BB": "Barbados", "BY": "Bielorrusia", "BE": "Bélgica", "BZ": "Belice", "BJ": "Benín", "BT": "Bután",
+    "BO": "Bolivia", "BA": "Bosnia y Herzegovina", "BW": "Botsuana", "BR": "Brasil", "BN": "Brunéi", "BG": "Bulgaria",
+    "BF": "Burkina Faso", "BI": "Burundi", "CV": "Cabo Verde", "KH": "Camboya", "CM": "Camerún", "CA": "Canadá", "CF": "República Centroafricana",
+    "TD": "Chad", "CL": "Chile", "CN": "China", "CO": "Colombia", "KM": "Comoras", "CG": "República del Congo", "CD": "República Democrática del Congo",
+    "CR": "Costa Rica", "CI": "Costa de Marfil", "HR": "Croacia", "CU": "Cuba", "CY": "Chipre", "CZ": "República Checa",
+    "DK": "Dinamarca", "DJ": "Yibuti", "DM": "Dominica", "DO": "República Dominicana", "EC": "Ecuador", "EG": "Egipto", "SV": "El Salvador",
+    "GQ": "Guinea Ecuatorial", "ER": "Eritrea", "EE": "Estonia", "SZ": "Suazilandia", "ET": "Etiopía", "FJ": "Fiyi", "FI": "Finlandia",
+    "FR": "Francia", "GA": "Gabón", "GM": "Gambia", "GE": "Georgia", "DE": "Alemania", "GH": "Ghana", "GR": "Grecia", "GD": "Granada",
+    "GT": "Guatemala", "GN": "Guinea", "GW": "Guinea-Bisáu", "GY": "Guyana", "HT": "Haití", "HN": "Honduras", "HU": "Hungría",
+    "IS": "Islandia", "IN": "India", "ID": "Indonesia", "IR": "Irán", "IQ": "Irak", "IE": "Irlanda", "IL": "Israel", "IT": "Italia",
+    "JM": "Jamaica", "JP": "Japón", "JO": "Jordania", "KZ": "Kazajistán", "KE": "Kenia", "KI": "Kiribati", "KP": "Corea del Norte",
+    "KR": "Corea del Sur", "KW": "Kuwait", "KG": "Kirguistán", "LA": "Laos", "LV": "Letonia", "LB": "Líbano", "LS": "Lesoto",
+    "LR": "Liberia", "LY": "Libia", "LI": "Liechtenstein", "LT": "Lituania", "LU": "Luxemburgo", "MG": "Madagascar", "MW": "Malaui",
+    "MY": "Malasia", "MV": "Maldivas", "ML": "Malí", "MT": "Malta", "MH": "Islas Marshall", "MR": "Mauritania", "MU": "Mauricio",
+    "MX": "México", "FM": "Micronesia", "MD": "Moldavia", "MC": "Mónaco", "MN": "Mongolia", "ME": "Montenegro", "MA": "Marruecos",
+    "MZ": "Mozambique", "MM": "Birmania", "NA": "Namibia", "NR": "Nauru", "NP": "Nepal", "NL": "Países Bajos", "NZ": "Nueva Zelanda",
+    "NI": "Nicaragua", "NE": "Níger", "NG": "Nigeria", "MK": "Macedonia del Norte", "NO": "Noruega", "OM": "Omán", "PK": "Pakistán",
+    "PW": "Palaos", "PA": "Panamá", "PG": "Papúa Nueva Guinea", "PY": "Paraguay", "PE": "Perú", "PH": "Filipinas", "PL": "Polonia",
+    "PT": "Portugal", "QA": "Catar", "RO": "Rumania", "RU": "Rusia", "RW": "Ruanda", "KN": "San Cristóbal y Nieves", "LC": "Santa Lucía",
+    "VC": "San Vicente y las Granadinas", "WS": "Samoa", "SM": "San Marino", "ST": "Santo Tomé y Príncipe", "SA": "Arabia Saudita",
+    "SN": "Senegal", "RS": "Serbia", "SC": "Seychelles", "SL": "Sierra Leona", "SG": "Singapur", "SK": "Eslovaquia", "SI": "Eslovenia",
+    "SB": "Islas Salomón", "SO": "Somalia", "ZA": "Sudáfrica", "SS": "Sudán del Sur", "ES": "España", "LK": "Sri Lanka", "SD": "Sudán",
+    "SR": "Surinam", "SE": "Suecia", "CH": "Suiza", "SY": "Siria", "TJ": "Tayikistán", "TZ": "Tanzania", "TH": "Tailandia", "TL": "Timor Oriental",
+    "TG": "Togo", "TO": "Tonga", "TT": "Trinidad y Tobago", "TN": "Túnez", "TR": "Turquía", "TM": "Turkmenistán", "TV": "Tuvalu",
+    "UG": "Uganda", "UA": "Ucrania", "AE": "Emiratos Árabes Unidos", "GB": "Reino Unido", "US": "Estados Unidos", "UY": "Uruguay",
+    "UZ": "Uzbekistán", "VU": "Vanuatu", "VE": "Venezuela", "VN": "Vietnam", "YE": "Yemen", "ZM": "Zambia", "ZW": "Zimbabue"
+};
+
 const archiveView = document.getElementById('archive-view');
 const gameView = document.getElementById('game-view');
 const reviewView = document.getElementById('review-view');
@@ -35,20 +68,56 @@ fetch('datos.json')
       "fecha_inicio": "2026-11-12",
       "paises": [{"nombre": "Senegal"}, {"nombre": "Japón"}, {"nombre": "España"}, {"nombre": "Brasil"}],
       "retos": [{
-        "dia": 0,
-        "respuesta": "Senegal",
-        "pistas": [
-          "🌍 Es un país del continente africano.",
-          "🌊 Tiene costa bañada por el océano Atlántico.",
-          "🏙️ Su capital es una de las ciudades más pobladas de África occidental.",
-          "🗣️ Su idioma oficial es el francés.",
-          "🚩 Su bandera tiene tres franjas verticales: verde, amarilla y roja con una estrella."
-        ]
+        "dia": 0, "respuesta": "Senegal",
+        "pistas": ["🌍 Es un país africano.", "🌊 Tiene costa en el Atlántico.", "🏙️ Su capital es poblada.", "🗣️ Idioma: francés.", "🚩 Bandera: verde, amarilla, roja."]
       }]
     };
     iniciarJuego(fallbackData);
   });
   
+// INYECTAR MAPA SVG
+fetch('world.svg')
+  .then(res => {
+    if(!res.ok) throw new Error("No se encontró world.svg");
+    return res.text();
+  })
+  .then(svgText => {
+    const mapaContainer = document.getElementById('mapa-interactivo');
+    mapaContainer.innerHTML = svgText; // Incrustar el código XML del SVG
+    
+    // Configurar interacciones
+    const paths = mapaContainer.querySelectorAll('path');
+    paths.forEach(path => {
+        path.addEventListener('click', function() {
+            if (savedState.status !== 'playing') return;
+            
+            // Buscar la clave (normalmente el SVG usa 'id', 'name' o 'class' como "ES", "FR")
+            let clave = (this.getAttribute('id') || this.getAttribute('name') || this.getAttribute('class') || "").toUpperCase();
+            
+            // Traducir código a nombre español usando el diccionario
+            let nombreEspanol = svgCodeToName[clave];
+            
+            // Si el SVG ya trae los nombres directamente, buscar por nombre
+            if (!nombreEspanol) {
+                const normalizar = str => str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+                const encontrado = paises.find(p => normalizar(p.nombre) === normalizar(clave));
+                if(encontrado) nombreEspanol = encontrado.nombre;
+            }
+
+            if (nombreEspanol) {
+                buscador.value = nombreEspanol;
+                procesarIntento();
+            } else {
+                console.warn("Has clicado un territorio sin mapeo conocido: " + clave);
+            }
+        });
+    });
+  })
+  .catch(err => {
+      document.getElementById('cargando-mapa').innerText = "🗺️ Mapa no disponible (falta world.svg)";
+      console.warn("No se cargó el mapa:", err);
+  });
+
 function iniciarJuego(data) {
     paises = data.paises;
     const retos = data.retos;
@@ -167,7 +236,6 @@ buscador.addEventListener('input', function() {
   const val = this.value.toLowerCase();
   autocompletarLista.innerHTML = '';
   
-  // Limpiar estilos de error si los hay al empezar a escribir de nuevo
   buscador.style.borderColor = "#000";
   buscador.style.backgroundColor = "#fff";
 
@@ -176,8 +244,7 @@ buscador.addEventListener('input', function() {
     return;
   }
   
-  // Buscar ignorando tildes para mayor comodidad
-  const normalizar = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizar = str => str.normalize("NFD").replace(/[̀-ͯ]/g, "");
   const filtrados = paises.filter(p => normalizar(p.nombre.toLowerCase()).startsWith(normalizar(val)));
   
   if (filtrados.length > 0) {
@@ -189,7 +256,7 @@ buscador.addEventListener('input', function() {
       div.onclick = () => {
         buscador.value = p.nombre;
         autocompletarLista.classList.add('hidden');
-        procesarIntento(); // Enviar automáticamente al hacer clic en la lista
+        procesarIntento();
       };
       autocompletarLista.appendChild(div);
     });
@@ -198,12 +265,10 @@ buscador.addEventListener('input', function() {
   }
 });
 
-// Cerrar lista si se hace clic fuera
 document.addEventListener('click', (e) => {
   if (e.target !== buscador) autocompletarLista.classList.add('hidden');
 });
 
-// Enviar con la tecla ENTER
 buscador.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         autocompletarLista.classList.add('hidden');
@@ -221,26 +286,23 @@ function procesarIntento() {
   if (savedState.status !== 'playing') return;
   const intentoStr = buscador.value.trim();
   
-  if (!intentoStr) return; // Si está vacío, no hacer nada
+  if (!intentoStr) return;
   
-  const normalizar = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const normalizar = str => str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const paisIntento = paises.find(p => normalizar(p.nombre) === normalizar(intentoStr));
   
-  // VALIDACIÓN: Si no es un país de la lista
   if (!paisIntento) {
     buscador.style.borderColor = "var(--danger)";
     buscador.style.backgroundColor = "#fecaca";
     
-    // Animación de sacudida (requiere añadir la clase shake en el CSS)
     buscador.classList.add('shake-error');
     setTimeout(() => buscador.classList.remove('shake-error'), 400);
     
-    // Cambiar temporalmente el placeholder
     const textoOriginal = buscador.value;
     buscador.value = "";
     buscador.placeholder = "¡Ese país no existe!";
     setTimeout(() => {
-        buscador.placeholder = "Escribe un país...";
+        buscador.placeholder = "Escribe o pulsa un país...";
         buscador.value = textoOriginal;
         buscador.style.borderColor = "#000";
         buscador.style.backgroundColor = "#fff";
@@ -248,7 +310,6 @@ function procesarIntento() {
     return;
   }
   
-  // Si el país es válido, procesarlo
   buscador.value = '';
   savedState.guessed.push(paisIntento.nombre);
   

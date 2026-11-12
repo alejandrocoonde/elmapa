@@ -21,7 +21,7 @@
       <span id="countdown-timer" class="mono">--:--:--</span>
     </div>
     
-    <!-- CÓMO JUGAR -->
+    <!-- CÓMO JUGAR EN ACORDEÓN DESPLEGABLE ESTILO COLGADO -->
     <details class="pixel-box how-to-accordion">
       <summary>
         <h3>CÓMO JUGAR <span class="arrow">▼</span></h3>
@@ -38,6 +38,7 @@
           <li>4 pistas: <strong>40 pts</strong></li>
           <li>5 pistas: <strong>20 pts</strong></li>
         </ul>
+        <p style="margin-top:10px;">🖱️ <strong>¡NUEVO!</strong> Puedes escribir el país o hacer clic directamente en el mapa mundial.</p>
       </div>
     </details>
     
@@ -46,6 +47,8 @@
     <!-- OTROS MINIJUEGOS -->
     <div class="pixel-box" style="text-align: center; margin-top: 10px;">
       <h2 style="margin-bottom: 15px; color: var(--accent);">OTROS MINIJUEGOS</h2>
+      
+      <!-- Enlace a La Horquilla -->
       <div style="margin-bottom: 20px;">
         <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">¿Quieres poner a prueba tu intuición con números?</p>
         <a href="https://alejandrocoonde.github.io/lahorquilla/" style="text-decoration: none;">
@@ -54,6 +57,8 @@
           </button>
         </a>
       </div>
+      
+      <!-- Enlace a El Colgado -->
       <div>
         <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">Adivina la palabra oculta antes de caer a la lava.</p>
         <a href="https://alejandrocoonde.github.io/elcolgado/" style="text-decoration: none;">
@@ -92,9 +97,10 @@
     </header>
     
     <div class="pixel-box" style="padding: 15px;">
-      <!-- MAPA PLACEHOLDER (Aquí irá tu SVG en el futuro) -->
-      <div id="mapa-interactivo" class="mapa-svg-container hidden-mobile">
-        <p>🗺️ (Espacio para tu mapa SVG)</p>
+      
+      <!-- CONTENEDOR DEL MAPA SVG (JS lo rellenará) -->
+      <div id="mapa-interactivo" class="mapa-svg-container">
+        <p id="cargando-mapa" style="color: var(--track); font-size: 1.2rem;">🗺️ Cargando mapa mundial...</p>
       </div>
 
       <div id="hints-container" class="hints-list">
@@ -104,7 +110,7 @@
       <button id="btn-pedir-pista" class="btn-pixel small-btn" style="width: 100%; margin: 15px 0; background: var(--card); color: var(--text); border-color: var(--accent);">🔍 PEDIR SIGUIENTE PISTA (-20 pts)</button>
       
       <div class="buscador-container">
-        <input type="text" id="buscador" placeholder="Escribe un país..." autocomplete="off">
+        <input type="text" id="buscador" placeholder="Escribe o pulsa un país..." autocomplete="off">
         <div id="autocompletar-lista" class="hidden"></div>
         <button id="btn-enviar" class="btn-pixel" style="margin-top: 10px;">ADIVINAR</button>
       </div>
