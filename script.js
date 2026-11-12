@@ -3,11 +3,9 @@ let todayPuzzle = null;
 let paises = [];
 
 let savedState = JSON.parse(localStorage.getItem('elmapaTodayState')) || {
-  date: "", guessed: [], cluesRevealed: 1, score: 100, status: 'playing' 
+  date: "", guessed: [], cluesRevealed: 1, score: 100, isMapClick: false, status: 'playing' 
 };
 
-// --- DICCIONARIO UNIVERSAL (ISO a Español) ---
-// Traduce el ID o Nombre interno que traiga tu world.svg al nombre en español de tu base de datos
 const svgCodeToName = {
     "AF": "Afganistán", "AL": "Albania", "DZ": "Argelia", "AD": "Andorra", "AO": "Angola", "AG": "Antigua y Barbuda",
     "AR": "Argentina", "AM": "Armenia", "AU": "Australia", "AT": "Austria", "AZ": "Azerbaiyán", "BS": "Bahamas", "BH": "Baréin",
@@ -53,7 +51,6 @@ const scoreDisplay = document.getElementById('score-display');
 const feedbackContainer = document.getElementById('feedback-container');
 const mensajePista = document.getElementById('mensaje-pista');
 
-// Carga de datos robusta
 fetch('datos.json')
   .then(res => {
     if (!res.ok) throw new Error('No se pudo cargar el archivo JSON');
@@ -63,13 +60,13 @@ fetch('datos.json')
     iniciarJuego(data);
   })
   .catch(err => {
-    console.warn("Fallo al cargar datos.json. Cargando datos de respaldo:", err);
+    console.warn("Fallo al cargar datos.json. Cargando respaldo:", err);
     const fallbackData = {
       "fecha_inicio": "2026-11-12",
       "paises": [{"nombre": "Senegal"}, {"nombre": "Japón"}, {"nombre": "España"}, {"nombre": "Brasil"}],
       "retos": [{
         "dia": 0, "respuesta": "Senegal",
-        "pistas": ["🌍 Es un país africano.", "🌊 Tiene costa en el Atlántico.", "🏙️ Su capital es poblada.", "🗣️ Idioma: francés.", "🚩 Bandera: verde, amarilla, roja."]
+        "pistas": ["🌍 Es un país africano.", "🌊 Costa en el Atlántico.", "🏙️ Capital poblada.", "🗣️ Idioma: francés.", "🚩 Bandera tricolor."]
       }]
     };
     iniciarJuego(fallbackData);
@@ -83,21 +80,16 @@ fetch('world.svg')
   })
   .then(svgText => {
     const mapaContainer = document.getElementById('mapa-interactivo');
-    mapaContainer.innerHTML = svgText; // Incrustar el código XML del SVG
+    mapaContainer.innerHTML = svgText;
     
-    // Configurar interacciones
     const paths = mapaContainer.querySelectorAll('path');
     paths.forEach(path => {
         path.addEventListener('click', function() {
             if (savedState.status !== 'playing') return;
             
-            // Buscar la clave (normalmente el SVG usa 'id', 'name' o 'class' como "ES", "FR")
             let clave = (this.getAttribute('id') || this.getAttribute('name') || this.getAttribute('class') || "").toUpperCase();
-            
-            // Traducir código a nombre español usando el diccionario
             let nombreEspanol = svgCodeToName[clave];
             
-            // Si el SVG ya trae los nombres directamente, buscar por nombre
             if (!nombreEspanol) {
                 const normalizar = str => str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
                 const encontrado = paises.find(p => normalizar(p.nombre) === normalizar(clave));
@@ -106,16 +98,16 @@ fetch('world.svg')
 
             if (nombreEspanol) {
                 buscador.value = nombreEspanol;
-                procesarIntento();
+                procesarIntento(true); // Indicar que viene de clic en el mapa
             } else {
-                console.warn("Has clicado un territorio sin mapeo conocido: " + clave);
+                console.warn("Territorio sin mapeo: " + clave);
             }
         });
     });
   })
   .catch(err => {
       document.getElementById('cargando-mapa').innerText = "🗺️ Mapa no disponible (falta world.svg)";
-      console.warn("No se cargó el mapa:", err);
+      console.warn("Error cargando mapa:", err);
   });
 
 function iniciarJuego(data) {
@@ -133,7 +125,7 @@ function iniciarJuego(data) {
     todayPuzzle = retos[dayIndex % retos.length];
     
     if (savedState.date !== todayKey) {
-      savedState = { date: todayKey, guessed: [], cluesRevealed: 1, score: 100, status: 'playing' };
+      savedState = { date: todayKey, guessed: [], cluesRevealed: 1, score: 100, isMapClick: false, status: 'playing' };
       saveState();
     }
     
@@ -210,7 +202,7 @@ function showReview() {
       <p style="font-size:3rem; font-weight:bold; margin: 10px 0; text-transform:uppercase; color: var(--text);">${todayPuzzle.respuesta}</p>
       
       <div style="background: var(--bg); padding: 10px; border: 2px solid #000; border-radius: 4px; color: var(--text); margin-top: 15px;">
-        <p style="font-size:1.3rem; margin-top:5px;">Puntuación final: <strong>${savedState.score} pts</strong></p>
+        <p style="font-size:1.3rem; margin-top:5px;">Puntuación final: <strong>${savedState.score} pts</strong> ${savedState.isMapClick && isWon ? '(¡+20 bonus mapa!)' : ''}</p>
         <p style="font-size:1.3rem; margin-top:5px;">Pistas necesitadas: <strong>${savedState.cluesRevealed} / 5</strong></p>
       </div>
     </div>
@@ -221,7 +213,7 @@ document.getElementById('btn-share').onclick = () => {
   const isWon = savedState.status === 'won';
   const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n` +
                `País descubierto con ${savedState.cluesRevealed}/5 pistas.\n` +
-               `Puntuación: ${savedState.score} pts 🌍\n\n` +
+               `Puntuación: ${savedState.score} pts 🌍 ${savedState.isMapClick && isWon ? '⭐ (+20 bonus mapa)' : ''}\n\n` +
                `Juega en: https://alejandrocoonde.github.io/elmapa/`;
   
   navigator.clipboard.writeText(text).then(() => {
@@ -231,11 +223,9 @@ document.getElementById('btn-share').onclick = () => {
   });
 };
 
-// Autocompletar
 buscador.addEventListener('input', function() {
   const val = this.value.toLowerCase();
   autocompletarLista.innerHTML = '';
-  
   buscador.style.borderColor = "#000";
   buscador.style.backgroundColor = "#fff";
 
@@ -256,7 +246,7 @@ buscador.addEventListener('input', function() {
       div.onclick = () => {
         buscador.value = p.nombre;
         autocompletarLista.classList.add('hidden');
-        procesarIntento();
+        procesarIntento(false);
       };
       autocompletarLista.appendChild(div);
     });
@@ -265,6 +255,17 @@ buscador.addEventListener('input', function() {
   }
 });
 
+document.getElementById('btn-archive').onclick = () => {
+    gameView.classList.replace('show', 'hidden');
+    archiveView.classList.replace('hidden', 'show');
+    renderMenuUI();
+};
+document.getElementById('btn-back-archive').onclick = () => {
+    reviewView.classList.replace('show', 'hidden');
+    archiveView.classList.replace('hidden', 'show');
+    renderMenuUI();
+};
+
 document.addEventListener('click', (e) => {
   if (e.target !== buscador) autocompletarLista.classList.add('hidden');
 });
@@ -272,17 +273,17 @@ document.addEventListener('click', (e) => {
 buscador.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         autocompletarLista.classList.add('hidden');
-        procesarIntento();
+        procesarIntento(false);
     }
 });
 
-btnEnviar.onclick = procesarIntento;
+btnEnviar.onclick = () => procesarIntento(false);
 btnPedirPista.onclick = () => {
     if (savedState.status !== 'playing' || savedState.cluesRevealed >= 5) return;
     desbloquearPista();
 };
 
-function procesarIntento() {
+function procesarIntento(fromMap = false) {
   if (savedState.status !== 'playing') return;
   const intentoStr = buscador.value.trim();
   
@@ -294,7 +295,6 @@ function procesarIntento() {
   if (!paisIntento) {
     buscador.style.borderColor = "var(--danger)";
     buscador.style.backgroundColor = "#fecaca";
-    
     buscador.classList.add('shake-error');
     setTimeout(() => buscador.classList.remove('shake-error'), 400);
     
@@ -315,8 +315,15 @@ function procesarIntento() {
   
   if (paisIntento.nombre.toLowerCase() === todayPuzzle.respuesta.toLowerCase()) {
     savedState.status = 'won';
+    savedState.isMapClick = fromMap;
+    
+    // Si viene del mapa y no ha llegado a 0 puntos, aplicar el bonus de +20 pts (tope de 120)
+    if (fromMap) {
+        savedState.score = Math.min(120, savedState.score + 20);
+    }
+    
     saveState();
-    updateGameUI("¡Correcto!");
+    updateGameUI(fromMap ? "🎉 ¡Correcto desde el mapa! (+20 pts bonus)" : "🎉 ¡Correcto!");
   } else {
     if (savedState.cluesRevealed < 5) {
         desbloquearPista(`❌ "${paisIntento.nombre}" no es correcto. ¡Siguiente pista!`);
@@ -331,7 +338,7 @@ function procesarIntento() {
 
 function desbloquearPista(mensajeOpcional = null) {
     savedState.cluesRevealed++;
-    savedState.score -= 20;
+    savedState.score = Math.max(0, savedState.score - 20);
     saveState();
     updateGameUI(mensajeOpcional);
 }

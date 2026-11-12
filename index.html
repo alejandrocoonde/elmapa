@@ -17,11 +17,11 @@
     </div>
     
     <div class="pixel-box countdown-box">
-      <span class="countdown-label">⏳ PRÓXIMO RETO EN:</span>
+      <span class="countdown-label">⏳ PRÓXimo RETO EN:</span>
       <span id="countdown-timer" class="mono">--:--:--</span>
     </div>
     
-    <!-- CÓMO JUGAR EN ACORDEÓN DESPLEGABLE ESTILO COLGADO -->
+    <!-- CÓMO JUGAR EN ACORDEÓN DESPLEGABLE -->
     <details class="pixel-box how-to-accordion">
       <summary>
         <h3>CÓMO JUGAR <span class="arrow">▼</span></h3>
@@ -30,7 +30,7 @@
         <p>🌍 Adivina el <strong>país misterioso</strong> del día.</p>
         <p>🔍 El juego te dará hasta <strong>5 pistas progresivas</strong> sobre geografía, cultura, o estadística.</p>
         <p>💔 Un fallo (o pedir una pista manualmente) desbloqueará la siguiente pista y restará puntos.</p>
-        <p>🏆 <strong>Puntuaciones:</strong></p>
+        <p>🏆 <strong>Puntuaciones base:</strong></p>
         <ul style="margin-left: 20px; font-size: 1.2rem; color: var(--text);">
           <li>1 pista: <strong>100 pts</strong></li>
           <li>2 pistas: <strong>80 pts</strong></li>
@@ -38,7 +38,7 @@
           <li>4 pistas: <strong>40 pts</strong></li>
           <li>5 pistas: <strong>20 pts</strong></li>
         </ul>
-        <p style="margin-top:10px;">🖱️ <strong>¡NUEVO!</strong> Puedes escribir el país o hacer clic directamente en el mapa mundial.</p>
+        <p style="margin-top:8px;">⭐ <strong>¡Bonus!</strong> Si aciertas el país haciendo <strong>clic directamente en el mapa SVG</strong>, conseguirás <strong>+20 puntos extra</strong> en tu puntuación final.</p>
       </div>
     </details>
     
@@ -98,11 +98,11 @@
     
     <div class="pixel-box" style="padding: 15px;">
       
-      <!-- CONTENEDOR DEL MAPA SVG (JS lo rellenará) -->
+      <!-- CONTENEDOR DEL MAPA SVG -->
       <div id="mapa-interactivo" class="mapa-svg-container">
         <p id="cargando-mapa" style="color: var(--track); font-size: 1.2rem;">🗺️ Cargando mapa mundial...</p>
       </div>
-
+      
       <div id="hints-container" class="hints-list">
         <!-- Las pistas se inyectan por JS -->
       </div>
