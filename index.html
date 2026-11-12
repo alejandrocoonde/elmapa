@@ -15,27 +15,61 @@
       <h1 class="main-title">EL MAPA</h1>
       <span class="signature">by 87conde</span>
     </div>
+    
     <div class="pixel-box countdown-box">
       <span class="countdown-label">⏳ PRÓXIMO RETO EN:</span>
-      <span id="countdown-timer">--:--:--</span>
+      <span id="countdown-timer" class="mono">--:--:--</span>
     </div>
-    <div class="pixel-box" style="font-size: 1.3rem; text-transform: none;">
-      <h3 style="color: var(--accent); margin-bottom:10px; text-transform: uppercase;">CÓMO JUGAR</h3>
-      <p style="margin-bottom:8px;">🎯 Adivina el país del día.</p>
-      <p style="margin-bottom:8px;">💔 Tienes <strong>3 vidas</strong>.</p>
-      <p style="margin-bottom:8px;">🌍 Fallo 1: Te diremos si has acertado el <strong>continente</strong>.</p>
-      <p>🧭 Fallo 2: Te daremos la <strong>dirección</strong> (brújula) desde el país que has puesto hasta la solución correcta.</p>
+    
+    <!-- CÓMO JUGAR EN ACORDEÓN DESPLEGABLE -->
+    <details class="pixel-box how-to-accordion">
+      <summary>
+        <h3>CÓMO JUGAR <span class="arrow">▼</span></h3>
+      </summary>
+      <div class="accordion-content">
+        <p>🎯 Adivina el país del día a partir de la pregunta.</p>
+        <p>💔 Tienes <strong>3 vidas</strong>.</p>
+        <p>🌍 Fallo 1: Te diremos si has acertado el <strong>continente</strong>.</p>
+        <p>🧭 Fallo 2: Te daremos la <strong>dirección</strong> (brújula) desde el país que has puesto hasta la solución correcta.</p>
+      </div>
+    </details>
+    
+    <div id="daily-action-container" style="text-align: center; margin-top: 10px;"></div>
+    
+    <!-- OTROS MINIJUEGOS -->
+    <div class="pixel-box" style="text-align: center; margin-top: 10px;">
+      <h2 style="margin-bottom: 15px; color: var(--accent);">OTROS MINIJUEGOS</h2>
+      
+      <!-- Enlace a La Horquilla -->
+      <div style="margin-bottom: 20px;">
+        <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">¿Quieres poner a prueba tu intuición con números?</p>
+        <a href="https://alejandrocoonde.github.io/lahorquilla/" style="text-decoration: none;">
+          <button class="btn-pixel" style="background: #16a34a; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0 auto; width: 90%;">
+            <span>🎯</span> JUGAR "LA HORQUILLA"
+          </button>
+        </a>
+      </div>
+      
+      <!-- Enlace a El Colgado -->
+      <div>
+        <p style="margin-bottom: 10px; font-size: 1.3rem; text-transform: none; color: var(--text-muted);">Adivina la palabra oculta antes de caer a la lava.</p>
+        <a href="https://alejandrocoonde.github.io/elcolgado/" style="text-decoration: none;">
+          <button class="btn-pixel" style="background: #e11d48; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0 auto; width: 90%;">
+            <span>🪢</span> JUGAR "EL COLGADO"
+          </button>
+        </a>
+      </div>
     </div>
-    <div id="daily-action-container" style="text-align: center;"></div>
   </div>
   
   <!-- REVISIÓN -->
   <div id="review-view" class="archive-container hidden">
     <div class="pixel-box">
       <h2>REVISIÓN DE HOY</h2>
+      <p style="margin-top:5px; margin-bottom: 15px; color: var(--text-muted);">Tu resultado en el reto diario:</p>
       <div id="review-content" class="review-content"></div>
-      <button id="btn-share" class="btn-pixel" style="margin-top: 20px; background: #3b82f6;">COMPARTIR 📋</button>
-      <button id="btn-back-archive" class="btn-pixel" style="margin-top: 10px; background: var(--track);">VOLVER AL MENÚ</button>
+      <button id="btn-share" class="btn-pixel share-btn" style="margin-top: 20px; background: #3b82f6;">COMPARTIR RESULTADO 📋</button>
+      <button id="btn-back-archive" class="btn-pixel" style="margin-top: 10px; background: var(--track); color: #fff;">VOLVER AL MENÚ</button>
     </div>
   </div>
   

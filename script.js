@@ -72,6 +72,8 @@ function renderMenuUI() {
   btn.className = 'btn-pixel';
   if (savedState.status === 'playing') {
     btn.textContent = '▶ JUGAR';
+    btn.style.padding = '20px';
+    btn.style.fontSize = '2rem';
     btn.onclick = () => {
         archiveView.classList.replace('show', 'hidden');
         gameView.classList.replace('hidden', 'show');
@@ -79,6 +81,9 @@ function renderMenuUI() {
     };
   } else {
     btn.style.background = savedState.status === 'won' ? 'var(--success)' : 'var(--danger)';
+    btn.style.color = '#fff';
+    btn.style.padding = '20px';
+    btn.style.fontSize = '2rem';
     btn.textContent = 'HOY: JUGADO (REVISIÓN)';
     btn.onclick = showReview;
   }
@@ -104,10 +109,13 @@ function showReview() {
   const isWon = savedState.status === 'won';
   document.getElementById('review-content').innerHTML = `
     <div class="review-item ${isWon ? 'correct' : 'incorrect'}">
-      <p style="font-size:1.8rem; font-weight:bold;">${isWon ? '✨ ¡ACERTASTE!' : '💀 SIN VIDAS'}</p>
-      <p style="font-size:3rem; font-weight:bold; margin: 10px 0; text-transform:uppercase;">${todayPuzzle.respuesta}</p>
-      <p style="font-size:1.3rem; text-transform:none;">${todayPuzzle.pregunta}</p>
-      <p style="margin-top:15px; font-size:1.5rem;">Fallos cometidos: ${savedState.fails} / 3</p>
+      <p style="font-size:1.8rem; font-weight:bold; color: ${isWon ? 'var(--success)' : 'var(--danger)'};">${isWon ? '✨ ¡ACERTASTE!' : '💀 SIN VIDAS'}</p>
+      <p style="font-size:3rem; font-weight:bold; margin: 10px 0; text-transform:uppercase; color: var(--text);">${todayPuzzle.respuesta}</p>
+      <p style="font-size:1.3rem; text-transform:none; color: var(--text);"><strong>Pregunta:</strong> ${todayPuzzle.pregunta}</p>
+      
+      <div style="background: var(--bg); padding: 10px; border: 2px solid #000; border-radius: 4px; color: var(--text); margin-top: 15px;">
+        <p style="font-size:1.3rem; margin-top:5px;">Fallos cometidos: <strong>${savedState.fails} / 3</strong></p>
+      </div>
     </div>
   `;
 }
@@ -115,9 +123,10 @@ function showReview() {
 document.getElementById('btn-share').onclick = () => {
   const isWon = savedState.status === 'won';
   const vidas = 3 - savedState.fails;
-  const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n` +
-               `Vidas: ${'💚'.repeat(Math.max(0, vidas))}${'🖤'.repeat(savedState.fails)}\n\n` +
+  const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n\n` +
+               `Vidas restantes: ${'💚'.repeat(Math.max(0, vidas))}${'🖤'.repeat(savedState.fails)}\n\n` +
                `Juega en: https://alejandrocoonde.github.io/elmapa/`;
+  
   navigator.clipboard.writeText(text).then(() => {
     const t = document.getElementById('toast');
     t.classList.add('show');
@@ -186,7 +195,6 @@ function updateUI(ultimoIntento = null) {
   
   if (savedState.status !== 'playing') {
     if(ultimoIntento) {
-        // Mostrar feedback final 1 segundo antes de ir a revisión
         feedbackContainer.classList.remove('hidden');
         brujula.classList.add('hidden');
         if(savedState.status === 'won') {
@@ -216,7 +224,6 @@ function updateUI(ultimoIntento = null) {
       mensajePista.innerHTML = `❌ Fallo 2. El país correcto está al <strong>${dir}</strong> de ${ultimoIntento.nombre}.`;
       brujula.classList.remove('hidden');
       
-      // Animación brújula
       flecha.style.transform = `rotate(0deg)`;
       setTimeout(() => {
           flecha.style.transform = `rotate(${angulo}deg)`;
@@ -225,7 +232,6 @@ function updateUI(ultimoIntento = null) {
   }
 }
 
-// Haversine / Bearing math para la brújula
 function calcularRumbo(lat1, lon1, lat2, lon2) {
   const toRad = x => x * Math.PI / 180;
   const toDeg = x => x * 180 / Math.PI;
