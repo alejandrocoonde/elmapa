@@ -1,0 +1,361 @@
+{
+  "fecha_inicio": "2026-11-12",
+  "paises": [
+    {
+      "nombre": "Japón",
+      "continente": "Asia",
+      "lat": 36.2,
+      "lon": 138.25
+    },
+    {
+      "nombre": "Rusia",
+      "continente": "Europa",
+      "lat": 61.5,
+      "lon": 105.3
+    },
+    {
+      "nombre": "Canadá",
+      "continente": "América",
+      "lat": 56.1,
+      "lon": -106.3
+    },
+    {
+      "nombre": "Brasil",
+      "continente": "América",
+      "lat": -14.2,
+      "lon": -51.9
+    },
+    {
+      "nombre": "Australia",
+      "continente": "Oceanía",
+      "lat": -25.2,
+      "lon": 133.7
+    },
+    {
+      "nombre": "China",
+      "continente": "Asia",
+      "lat": 35.8,
+      "lon": 104.1
+    },
+    {
+      "nombre": "Egipto",
+      "continente": "África",
+      "lat": 26.8,
+      "lon": 30.8
+    },
+    {
+      "nombre": "Argentina",
+      "continente": "América",
+      "lat": -38.4,
+      "lon": -63.6
+    },
+    {
+      "nombre": "Italia",
+      "continente": "Europa",
+      "lat": 41.8,
+      "lon": 12.5
+    },
+    {
+      "nombre": "Sudáfrica",
+      "continente": "África",
+      "lat": -30.5,
+      "lon": 22.9
+    },
+    {
+      "nombre": "Francia",
+      "continente": "Europa",
+      "lat": 46.2,
+      "lon": 2.2
+    },
+    {
+      "nombre": "México",
+      "continente": "América",
+      "lat": 23.6,
+      "lon": -102.5
+    },
+    {
+      "nombre": "India",
+      "continente": "Asia",
+      "lat": 20.5,
+      "lon": 78.9
+    },
+    {
+      "nombre": "España",
+      "continente": "Europa",
+      "lat": 40.4,
+      "lon": -3.7
+    },
+    {
+      "nombre": "Islandia",
+      "continente": "Europa",
+      "lat": 64.9,
+      "lon": -19.0
+    },
+    {
+      "nombre": "Nueva Zelanda",
+      "continente": "Oceanía",
+      "lat": -40.9,
+      "lon": 174.8
+    },
+    {
+      "nombre": "Colombia",
+      "continente": "América",
+      "lat": 4.5,
+      "lon": -74.2
+    },
+    {
+      "nombre": "Madagascar",
+      "continente": "África",
+      "lat": -18.7,
+      "lon": 46.8
+    },
+    {
+      "nombre": "Grecia",
+      "continente": "Europa",
+      "lat": 39.0,
+      "lon": 22.9
+    },
+    {
+      "nombre": "Noruega",
+      "continente": "Europa",
+      "lat": 60.4,
+      "lon": 8.4
+    },
+    {
+      "nombre": "Chile",
+      "continente": "América",
+      "lat": -35.6,
+      "lon": -71.5
+    },
+    {
+      "nombre": "Mongolia",
+      "continente": "Asia",
+      "lat": 46.8,
+      "lon": 103.8
+    },
+    {
+      "nombre": "Perú",
+      "continente": "América",
+      "lat": -9.1,
+      "lon": -75.0
+    },
+    {
+      "nombre": "Tailandia",
+      "continente": "Asia",
+      "lat": 15.8,
+      "lon": 100.9
+    },
+    {
+      "nombre": "Marruecos",
+      "continente": "África",
+      "lat": 31.7,
+      "lon": -7.0
+    },
+    {
+      "nombre": "Turquía",
+      "continente": "Asia",
+      "lat": 38.9,
+      "lon": 35.2
+    },
+    {
+      "nombre": "Kenia",
+      "continente": "África",
+      "lat": -0.0,
+      "lon": 37.9
+    },
+    {
+      "nombre": "Cuba",
+      "continente": "América",
+      "lat": 21.5,
+      "lon": -77.7
+    },
+    {
+      "nombre": "Vietnam",
+      "continente": "Asia",
+      "lat": 14.0,
+      "lon": 108.2
+    },
+    {
+      "nombre": "Suiza",
+      "continente": "Europa",
+      "lat": 46.8,
+      "lon": 8.2
+    },
+    {
+      "nombre": "Alemania",
+      "continente": "Europa",
+      "lat": 51.1,
+      "lon": 10.4
+    },
+    {
+      "nombre": "Estados Unidos",
+      "continente": "América",
+      "lat": 37.0,
+      "lon": -95.7
+    },
+    {
+      "nombre": "Reino Unido",
+      "continente": "Europa",
+      "lat": 55.3,
+      "lon": -3.4
+    },
+    {
+      "nombre": "Portugal",
+      "continente": "Europa",
+      "lat": 39.3,
+      "lon": -8.2
+    }
+  ],
+  "retos": [
+    {
+      "dia": 1,
+      "pregunta": "¿Qué país tiene la mayor esperanza de vida?",
+      "respuesta": "Japón"
+    },
+    {
+      "dia": 2,
+      "pregunta": "¿Cuál es el país más extenso del mundo?",
+      "respuesta": "Rusia"
+    },
+    {
+      "dia": 3,
+      "pregunta": "¿Qué país tiene más lagos en su territorio?",
+      "respuesta": "Canadá"
+    },
+    {
+      "dia": 4,
+      "pregunta": "¿Cuál es el mayor productor de café del mundo?",
+      "respuesta": "Brasil"
+    },
+    {
+      "dia": 5,
+      "pregunta": "¿Qué país es también un continente entero?",
+      "respuesta": "Australia"
+    },
+    {
+      "dia": 6,
+      "pregunta": "¿Qué país construyó una Gran Muralla de miles de kilómetros?",
+      "respuesta": "China"
+    },
+    {
+      "dia": 7,
+      "pregunta": "¿En qué país se encuentran las famosas pirámides de Giza?",
+      "respuesta": "Egipto"
+    },
+    {
+      "dia": 8,
+      "pregunta": "¿Dónde se encuentra la región conocida como Tierra del Fuego?",
+      "respuesta": "Argentina"
+    },
+    {
+      "dia": 9,
+      "pregunta": "¿Qué país tiene más sitios Patrimonio de la Humanidad?",
+      "respuesta": "Italia"
+    },
+    {
+      "dia": 10,
+      "pregunta": "¿Qué país africano tiene tres ciudades capitales?",
+      "respuesta": "Sudáfrica"
+    },
+    {
+      "dia": 11,
+      "pregunta": "¿Cuál es el país más visitado del mundo por turistas?",
+      "respuesta": "Francia"
+    },
+    {
+      "dia": 12,
+      "pregunta": "¿Qué país es el principal exportador mundial de aguacate?",
+      "respuesta": "México"
+    },
+    {
+      "dia": 13,
+      "pregunta": "¿Dónde se encuentra la industria cinematográfica de Bollywood?",
+      "respuesta": "India"
+    },
+    {
+      "dia": 14,
+      "pregunta": "¿Qué país es el mayor productor de aceite de oliva?",
+      "respuesta": "España"
+    },
+    {
+      "dia": 15,
+      "pregunta": "¿En qué país europeo no existen los mosquitos?",
+      "respuesta": "Islandia"
+    },
+    {
+      "dia": 16,
+      "pregunta": "¿En qué país se rodaron las películas de El Señor de los Anillos?",
+      "respuesta": "Nueva Zelanda"
+    },
+    {
+      "dia": 17,
+      "pregunta": "¿De qué país proviene la leyenda de El Dorado?",
+      "respuesta": "Colombia"
+    },
+    {
+      "dia": 18,
+      "pregunta": "¿Qué gran isla africana es el único hogar natural de los lémures?",
+      "respuesta": "Madagascar"
+    },
+    {
+      "dia": 19,
+      "pregunta": "¿Cuál es la cuna histórica de los Juegos Olímpicos?",
+      "respuesta": "Grecia"
+    },
+    {
+      "dia": 20,
+      "pregunta": "¿Qué país escandinavo es famoso por sus profundos fiordos?",
+      "respuesta": "Noruega"
+    },
+    {
+      "dia": 21,
+      "pregunta": "¿Cuál es el país más largo y angosto del mundo?",
+      "respuesta": "Chile"
+    },
+    {
+      "dia": 22,
+      "pregunta": "¿Qué país tiene la menor densidad de población del mundo?",
+      "respuesta": "Mongolia"
+    },
+    {
+      "dia": 23,
+      "pregunta": "¿En qué país se encuentra la ciudadela inca de Machu Picchu?",
+      "respuesta": "Perú"
+    },
+    {
+      "dia": 24,
+      "pregunta": "¿Qué país asiático era conocido antiguamente como Siam?",
+      "respuesta": "Tailandia"
+    },
+    {
+      "dia": 25,
+      "pregunta": "¿Qué país está separado de España por el Estrecho de Gibraltar?",
+      "respuesta": "Marruecos"
+    },
+    {
+      "dia": 26,
+      "pregunta": "¿Qué país tiene su territorio dividido entre Europa y Asia y su capital es Ankara?",
+      "respuesta": "Turquía"
+    },
+    {
+      "dia": 27,
+      "pregunta": "¿Qué país africano es mundialmente conocido por la reserva Masái Mara?",
+      "respuesta": "Kenia"
+    },
+    {
+      "dia": 28,
+      "pregunta": "¿Cuál es la isla más grande del mar Caribe?",
+      "respuesta": "Cuba"
+    },
+    {
+      "dia": 29,
+      "pregunta": "¿En qué país se encuentra la famosa bahía de Ha Long?",
+      "respuesta": "Vietnam"
+    },
+    {
+      "dia": 30,
+      "pregunta": "¿Qué país es famoso por su estricta neutralidad política y sus relojes?",
+      "respuesta": "Suiza"
+    }
+  ]
+}

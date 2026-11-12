@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EL MAPA - by 87conde</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#ecfdf5">
+</head>
+<body>
+  <!-- MENÚ -->
+  <div id="archive-view" class="archive-container show">
+    <div class="title-container">
+      <h1 class="main-title">EL MAPA</h1>
+      <span class="signature">by 87conde</span>
+    </div>
+    <div class="pixel-box countdown-box">
+      <span class="countdown-label">⏳ PRÓXIMO RETO EN:</span>
+      <span id="countdown-timer">--:--:--</span>
+    </div>
+    <div class="pixel-box" style="font-size: 1.3rem; text-transform: none;">
+      <h3 style="color: var(--accent); margin-bottom:10px; text-transform: uppercase;">CÓMO JUGAR</h3>
+      <p style="margin-bottom:8px;">🎯 Adivina el país del día.</p>
+      <p style="margin-bottom:8px;">💔 Tienes <strong>3 vidas</strong>.</p>
+      <p style="margin-bottom:8px;">🌍 Fallo 1: Te diremos si has acertado el <strong>continente</strong>.</p>
+      <p>🧭 Fallo 2: Te daremos la <strong>dirección</strong> (brújula) desde el país que has puesto hasta la solución correcta.</p>
+    </div>
+    <div id="daily-action-container" style="text-align: center;"></div>
+  </div>
+  
+  <!-- REVISIÓN -->
+  <div id="review-view" class="archive-container hidden">
+    <div class="pixel-box">
+      <h2>REVISIÓN DE HOY</h2>
+      <div id="review-content" class="review-content"></div>
+      <button id="btn-share" class="btn-pixel" style="margin-top: 20px; background: #3b82f6;">COMPARTIR 📋</button>
+      <button id="btn-back-archive" class="btn-pixel" style="margin-top: 10px; background: var(--track);">VOLVER AL MENÚ</button>
+    </div>
+  </div>
+  
+  <!-- JUEGO -->
+  <div id="game-view" class="game-container hidden">
+    <header class="pixel-box">
+      <div class="brand">
+        <h1>EL MAPA</h1>
+        <button id="btn-archive" class="btn-pixel small-btn">SALIR</button>
+      </div>
+      <div class="stats-row" style="justify-content: center;">
+        <div class="status-group">
+          <span>VIDAS: </span>
+          <span id="lives-display" class="lives">💚💚💚</span>
+        </div>
+      </div>
+    </header>
+    
+    <div class="pixel-box">
+      <p class="pregunta-texto" id="pregunta-texto">Cargando pregunta...</p>
+      
+      <div class="buscador-container">
+        <input type="text" id="buscador" placeholder="Escribe un país..." autocomplete="off">
+        <div id="autocompletar-lista" class="hidden"></div>
+        <button id="btn-enviar" class="btn-pixel" style="margin-top: 10px;">ADIVINAR</button>
+      </div>
+      
+      <div id="feedback-container" class="hidden">
+        <p id="mensaje-pista"></p>
+        <div id="brujula" class="hidden"><div id="flecha">⬆️</div></div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="toast" class="toast">¡COPIADO AL PORTAPAPELES!</div>
+  <script src="script.js"></script>
+</body>
+</html>
