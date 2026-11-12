@@ -2,7 +2,7 @@ let todayKey = "";
 let todayPuzzle = null;
 let paises = [];
 
-// Estado: cluesRevealed va de 1 a 5. Puntuación de 100 a 20.
+// Estado inicial: 1 pista desvelada, 100 puntos
 let savedState = JSON.parse(localStorage.getItem('elmapaTodayState')) || {
   date: "", guessed: [], cluesRevealed: 1, score: 100, status: 'playing' 
 };
@@ -21,9 +21,37 @@ const scoreDisplay = document.getElementById('score-display');
 const feedbackContainer = document.getElementById('feedback-container');
 const mensajePista = document.getElementById('mensaje-pista');
 
+// Carga de datos robusta con red de seguridad
 fetch('datos.json')
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) throw new Error('No se pudo cargar el archivo JSON');
+    return res.json();
+  })
   .then(data => {
+    iniciarJuego(data);
+  })
+  .catch(err => {
+    console.warn("Fallo al cargar datos.json. Cargando datos de respaldo (¿estás abriendo el HTML en local?):", err);
+    // Estos datos se cargan si estás probando en local sin servidor o si falla GitHub
+    const fallbackData = {
+      "fecha_inicio": "2026-11-12",
+      "paises": [{"nombre": "Senegal"}, {"nombre": "Japón"}, {"nombre": "España"}, {"nombre": "Brasil"}],
+      "retos": [{
+        "dia": 0,
+        "respuesta": "Senegal",
+        "pistas": [
+          "🌍 Es un país del continente africano.",
+          "🌊 Tiene costa bañada por el océano Atlántico.",
+          "🏙️ Su capital es una de las ciudades más pobladas de África occidental.",
+          "🗣️ Su idioma oficial es el francés.",
+          "🚩 Su bandera tiene tres franjas verticales: verde, amarilla y roja con una estrella."
+        ]
+      }]
+    };
+    iniciarJuego(fallbackData);
+  });
+  
+function iniciarJuego(data) {
     paises = data.paises;
     const retos = data.retos;
     const fechaInicio = data.fecha_inicio;
@@ -37,6 +65,7 @@ fetch('datos.json')
     
     todayPuzzle = retos[dayIndex % retos.length];
     
+    // Si es un día nuevo, resetear estado
     if (savedState.date !== todayKey) {
       savedState = { date: todayKey, guessed: [], cluesRevealed: 1, score: 100, status: 'playing' };
       saveState();
@@ -44,7 +73,7 @@ fetch('datos.json')
     
     renderMenuUI();
     initCountdown();
-  });
+}
   
 function saveState() {
   localStorage.setItem('elmapaTodayState', JSON.stringify(savedState));
@@ -123,126 +152,4 @@ function showReview() {
 }
 
 document.getElementById('btn-share').onclick = () => {
-  const isWon = savedState.status === 'won';
-  const text = `EL MAPA - RETO DE HOY ${isWon ? '🏆' : '💀'}\n` +
-               `País descubierto con ${savedState.cluesRevealed}/5 pistas.\n` +
-               `Puntuación: ${savedState.score} pts 🌍\n\n` +
-               `Juega en: https://alejandrocoonde.github.io/elmapa/`;
-  
-  navigator.clipboard.writeText(text).then(() => {
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  });
-};
-
-// Autocompletar
-buscador.addEventListener('input', function() {
-  const val = this.value.toLowerCase();
-  autocompletarLista.innerHTML = '';
-  if (!val) {
-    autocompletarLista.classList.add('hidden');
-    return;
-  }
-  const filtrados = paises.filter(p => p.nombre.toLowerCase().startsWith(val));
-  if (filtrados.length > 0) {
-    autocompletarLista.classList.remove('hidden');
-    filtrados.forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'item-lista';
-      div.innerText = p.nombre;
-      div.onclick = () => {
-        buscador.value = p.nombre;
-        autocompletarLista.classList.add('hidden');
-      };
-      autocompletarLista.appendChild(div);
-    });
-  } else {
-    autocompletarLista.classList.add('hidden');
-  }
-});
-
-document.addEventListener('click', (e) => {
-  if (e.target !== buscador) autocompletarLista.classList.add('hidden');
-});
-
-// Botón pedir pista manualmente
-btnPedirPista.onclick = () => {
-    if (savedState.status !== 'playing' || savedState.cluesRevealed >= 5) return;
-    desbloquearPista();
-};
-
-btnEnviar.onclick = () => {
-  if (savedState.status !== 'playing') return;
-  const intentoStr = buscador.value.trim();
-  const paisIntento = paises.find(p => p.nombre.toLowerCase() === intentoStr.toLowerCase());
-  
-  if (!paisIntento) {
-    alert("País no encontrado. Usa la lista desplegable.");
-    return;
-  }
-  
-  buscador.value = '';
-  savedState.guessed.push(paisIntento.nombre);
-  
-  if (paisIntento.nombre.toLowerCase() === todayPuzzle.respuesta.toLowerCase()) {
-    savedState.status = 'won';
-    saveState();
-    updateGameUI("¡Correcto!");
-  } else {
-    // Fallar cuesta una pista automáticamente
-    if (savedState.cluesRevealed < 5) {
-        desbloquearPista(`❌ ${paisIntento.nombre} no es correcto. ¡Siguiente pista!`);
-    } else {
-        savedState.score = 0;
-        savedState.status = 'lost';
-        saveState();
-        updateGameUI(`💀 Era ${todayPuzzle.respuesta}`);
-    }
-  }
-};
-
-function desbloquearPista(mensajeOpcional = null) {
-    savedState.cluesRevealed++;
-    savedState.score -= 20;
-    saveState();
-    updateGameUI(mensajeOpcional);
-}
-
-function updateGameUI(feedbackMsg = null) {
-  scoreDisplay.textContent = savedState.score;
-  hintsContainer.innerHTML = '';
-  
-  // Renderizar las 5 pistas
-  for (let i = 0; i < 5; i++) {
-      const div = document.createElement('div');
-      if (i < savedState.cluesRevealed) {
-          div.className = 'hint-item';
-          div.innerText = todayPuzzle.pistas[i];
-      } else {
-          div.className = 'hint-item locked';
-          div.innerText = "Contenido oculto para proteger el layout";
-      }
-      hintsContainer.appendChild(div);
-  }
-
-  // Estado del botón de pedir pista
-  if (savedState.cluesRevealed >= 5 || savedState.status !== 'playing') {
-      btnPedirPista.disabled = true;
-  } else {
-      btnPedirPista.disabled = false;
-  }
-  
-  // Mensaje de feedback si has fallado o ganado
-  if (feedbackMsg) {
-      feedbackContainer.classList.remove('hidden');
-      mensajePista.innerText = feedbackMsg;
-  }
-  
-  // Fin del juego
-  if (savedState.status !== 'playing') {
-      btnEnviar.disabled = true;
-      buscador.disabled = true;
-      setTimeout(showReview, 2000);
-  }
-}
+  const isWon = savedState.status === '
